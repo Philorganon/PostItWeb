@@ -1,27 +1,25 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "web-backend/api/webhook.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "web-backend/api/webhook.py"
+      "source": "/hook/:path*",
+      "destination": "/api/webhook"
     },
     {
-      "src": "/hook/(.*)",
-      "dest": "web-backend/api/webhook.py"
+      "source": "/api/webhook",
+      "destination": "/api/webhook"
     },
     {
-      "src": "/",
-      "dest": "web-frontend/index.html"
+      "source": "/api/index",
+      "destination": "/api/index"
     },
     {
-      "src": "/(.*)",
-      "dest": "web-frontend/$1"
+      "source": "/api/manage",
+      "destination": "/api/manage"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/webhook"
     }
   ]
 }
