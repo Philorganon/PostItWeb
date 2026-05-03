@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PostItDat</string>
+    <string name="folder_list">Folder</string>
+    <string name="settings">Pengaturan</string>
+    <string name="github_token">GitHub Personal Access Token</string>
+    <string name="github_user">GitHub Username</string>
+    <string name="github_repo">Nama Repository</string>
+    <string name="save">Simpan</string>
+    <string name="accept">✅ Terima</string>
+    <string name="empty_folder">Folder kosong\nBelum ada data yang masuk</string>
+    <string name="empty_folders">Belum ada folder\nBuat folder dulu di web dashboard</string>
+    <string name="refresh">Refresh</string>
+    <string name="polling_active">Memantau data baru...</string>
+</resources>

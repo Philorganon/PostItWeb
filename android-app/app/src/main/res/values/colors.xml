@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sky Blue Theme -->
+    <color name="sky_blue">#87CEEB</color>
+    <color name="blue_primary">#1E90FF</color>
+    <color name="blue_dark">#0066CC</color>
+    <color name="blue_light">#B0D9F7</color>
+    <color name="blue_accent">#00BFFF</color>
+    <color name="blue_surface">#E8F4FD</color>
+    <color name="blue_card">#F0F8FF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A2A3A</color>
+    <color name="text_secondary">#4A6A8A</color>
+    <color name="text_hint">#8AA8C4</color>
+    <color name="text_on_primary">#FFFFFF</color>
+
+    <!-- Status -->
+    <color name="green_accept">#2ECC71</color>
+    <color name="green_dark">#27AE60</color>
+    <color name="red_delete">#E74C3C</color>
+
+    <!-- Background -->
+    <color name="bg_main">#F0F8FF</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="divider">#C8E0F0</color>
+
+    <!-- Compat -->
+    <color name="colorPrimary">#1E90FF</color>
+    <color name="colorPrimaryVariant">#0066CC</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#00BFFF</color>
+    <color name="colorSecondaryVariant">#0099CC</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurface">#1A2A3A</color>
+    <color name="colorError">#E74C3C</color>
+    <color name="colorOnError">#FFFFFF</color>
+    <color name="colorBackground">#F0F8FF</color>
+    <color name="colorOnBackground">#1A2A3A</color>
+</resources>

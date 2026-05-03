@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Webhook Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-dark); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:9999;">
+        <div class="loader-spinner" style="width:50px; height:50px; border:5px solid var(--glass-border); border-top-color:var(--primary); border-radius:50%; animation:spin 1s linear infinite;"></div>
+        <p style="margin-top:20px; color:var(--text-dim); font-weight:500;">Checking Security...</p>
+    </div>
+
+    <style>
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Main App (Hidden by Default) -->
+    <div id="appContent" style="display: none;">
+        <!-- Notification -->
+        <div id="notification" class="notification">Berhasil!</div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboardScreen" class="screen active">
+        <div style="width: 100%; min-height: 100vh;">
+            <nav class="navbar">
+                <div class="nav-left">
+                    <div class="logo-small">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h2>Webhook Manager</h2>
+                </div>
+                <button onclick="logout()" class="logout-btn">Logout</button>
+            </nav>
+
+            <div class="container">
+                <!-- Create Folder -->
+                <div class="section">
+                    <h3>Buat Folder Webhook Baru</h3>
+                    <div class="create-folder">
+                        <input type="text" id="folderName" placeholder="Nama folder (contoh: anos)">
+                        <button onclick="createFolder()">Generate Webhook</button>
+                    </div>
+                </div>
+
+                <!-- Folders List -->
+                <div class="section">
+                    <h3>List Webhook Kamu</h3>
+                    <div id="foldersList" class="folders-grid">
+                        <!-- Folders injected here -->
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <!-- Manual Upload -->
+                    <div class="section" style="grid-column: 1 / -1;">
+                        <h3>Manual Upload</h3>
+                        <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 25px;">Kirim data langsung ke folder GitHub pilihanmu secara aman.</p>
+                        
+                        <div class="upload-section">
+                            <div class="grid-split" style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 20px; margin-bottom: 20px;">
+                                <div>
+                                    <label style="display: block; font-size: 14px; margin-bottom: 8px; color: var(--text-dim);">Pilih Folder Tujuan</label>
+                                    <select id="uploadFolder">
+                                        <option value="">Pilih Folder...</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 14px; margin-bottom: 8px; color: var(--text-dim);">Isi Pesan Teks (Opsional)</label>
+                                    <textarea id="textContent" placeholder="Ketik pesan di sini..." style="min-height: 52px;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="file-drop-area">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span style="font-weight: 600; margin-bottom: 5px;">Klik untuk pilih file</span>
+                                <span style="font-size: 13px; color: var(--text-dim);">Dukung banyak file sekaligus</span>
+                                <input type="file" id="fileInput" multiple onchange="updateFileName()">
+                            </div>
+                            <div id="file-name-display"></div>
+
+                            <button onclick="manualUpload()" style="padding: 18px;">🚀 Kirim ke GitHub Repository</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
