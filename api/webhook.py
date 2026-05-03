@@ -250,8 +250,7 @@ def check_auth():
     return jsonify({"authenticated": False}), 401
 
 # --- SERVING FRONTEND ---
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, 'public')
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'public')
 
 @app.route('/')
 def serve_index():
