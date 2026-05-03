@@ -244,30 +244,10 @@ def manual_upload():
 def check_auth():
     return jsonify({"authenticated": session.get('logged_in', False)}), 200
 
-# --- SERVING FRONTEND ---
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, 'public')
-
-@app.route('/')
-def serve_index():
-    if not session.get('logged_in'):
-        return redirect('/login.html') # Kick ke login di sisi SERVER
-    return send_from_directory(FRONTEND_DIR, 'index.html')
-
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
     session.clear()
     return jsonify({"success": True}), 200
-
-@app.route('/login.html')
-def serve_login():
-    if session.get('logged_in'):
-        return redirect('/')
-    return send_from_directory(FRONTEND_DIR, 'login.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory(FRONTEND_DIR, path)
 
 # Vercel entry point
 def handler(event, context):

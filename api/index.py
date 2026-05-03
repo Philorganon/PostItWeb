@@ -83,19 +83,6 @@ def get_secure_link(folder_id):
     token = generate_secure_token(folder_id)
     return jsonify({"success": True, "link": f"{request.host_url}hook/{folder_id}/{token}"})
 
-# --- SERVING FRONTEND LOKAL ---
-# Mencari folder public secara dinamis
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FRONTEND_DIR = os.path.join(BASE_DIR, 'public')
-
-@app.route('/')
-def serve_index():
-    return send_from_directory(FRONTEND_DIR, 'index.html')
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory(FRONTEND_DIR, path)
-
 # Vercel entry point
 def handler(event, context):
     return app(event, context)
