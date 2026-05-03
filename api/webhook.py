@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for
+from flask import Flask, request, jsonify, send_from_directory, redirect, url_for
 from flask_cors import CORS
 import base64
 import requests
@@ -41,8 +41,9 @@ def login_verify():
     data = request.get_json()
     if data.get("password") == APP_PASSWORD:
         FAILED_ATTEMPTS[ip] = 0
-        session['logged_in'] = True
-        return jsonify({"success": True, "message": "Login Berhasil"}), 200
+        # Kita kembalikan token (dalam hal ini password itu sendiri sebagai token sederhana)
+        # Atau bisa diganti dengan JWT di masa depan.
+        return jsonify({"success": True, "token": APP_PASSWORD, "message": "Login Berhasil"}), 200
     else:
         # Catat kegagalan
         FAILED_ATTEMPTS[ip] = FAILED_ATTEMPTS.get(ip, 0) + 1
@@ -242,12 +243,31 @@ def manual_upload():
 
 @app.route('/api/check_auth', methods=['GET'])
 def check_auth():
-    return jsonify({"authenticated": session.get('logged_in', False)}), 200
+    # Cek token dari header X-Password atau Authorization
+    token = request.headers.get("X-Password") or request.headers.get("Authorization")
+    if token == APP_PASSWORD or (token and token.startswith("Bearer ") and token.split(" ")[1] == APP_PASSWORD):
+        return jsonify({"authenticated": True}), 200
+    return jsonify({"authenticated": False}), 401
+
+# --- SERVING FRONTEND ---
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, 'public')
+
+@app.route('/')
+def serve_index():
+    return send_from_directory(FRONTEND_DIR, 'index.html')
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
-    session.clear()
     return jsonify({"success": True}), 200
+
+@app.route('/login.html')
+def serve_login():
+    return send_from_directory(FRONTEND_DIR, 'login.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(FRONTEND_DIR, path)
 
 # Vercel entry point
 def handler(event, context):

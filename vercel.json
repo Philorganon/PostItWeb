@@ -8,6 +8,22 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/hook/(.*)",
+      "dest": "api/webhook.py"
+    },
+    {
+      "src": "/(.*\\.(css|js|png|jpg|ico|svg))",
+      "dest": "public/$1"
+    },
+    {
+      "src": "/login.html",
+      "dest": "public/login.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "api/webhook.py"
     }

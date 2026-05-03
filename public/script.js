@@ -51,11 +51,11 @@ async function login() {
         });
 
         if (response.ok) {
+            const data = await response.json();
             localStorage.setItem(STORAGE.LOGGED_IN, "true");
             localStorage.setItem(STORAGE.ATTEMPTS, "0");
-            // Kita simpan password di session sementara (bukan di kode) 
-            // hanya untuk keperluan generate link webhook
-            sessionStorage.setItem('temp_pass', pwd); 
+            // Simpan token/password di localStorage agar persist di Vercel
+            localStorage.setItem('auth_token', data.token || pwd); 
             showDashboard();
         } else {
             handleFailedAttempt(err);
@@ -81,7 +81,7 @@ function handleFailedAttempt(err) {
 async function logout() {
     await fetch(`${CONFIG.API_BASE}/api/logout`, { method: "POST" });
     localStorage.removeItem(STORAGE.LOGGED_IN);
-    sessionStorage.removeItem('temp_pass');
+    localStorage.removeItem('auth_token');
     showLogin();
 }
 
@@ -95,7 +95,7 @@ function showDashboard() {
 
 // --- CORE LOGIC ---
 async function apiFetch(url, options = {}) {
-    const pass = sessionStorage.getItem('temp_pass');
+    const token = localStorage.getItem('auth_token');
     
     // Inisialisasi headers jika belum ada
     if (!options.headers) options.headers = {};
@@ -107,8 +107,11 @@ async function apiFetch(url, options = {}) {
         }
     }
 
-    // Selalu tambahkan password keamanan
-    options.headers["X-Password"] = pass;
+    // Selalu tambahkan token keamanan
+    if (token) {
+        options.headers["X-Password"] = token;
+        options.headers["Authorization"] = `Bearer ${token}`;
+    }
 
     try {
         const response = await fetch(url, options);
@@ -267,18 +270,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (isDashboard) {
         // --- SECURITY CHECKER ---
         try {
-            const response = await fetch(`${CONFIG.API_BASE}/api/check_auth`);
-            const data = await response.json();
+            // Gunakan apiFetch agar header auth ikut terkirim
+            const data = await apiFetch(`${CONFIG.API_BASE}/api/check_auth`);
 
             if (data && data.authenticated) {
                 // RENDER DASHBOARD
-                document.getElementById("loadingScreen").style.display = "none";
-                document.getElementById("appContent").style.display = "block";
+                const loading = document.getElementById("loadingScreen");
+                const app = document.getElementById("appContent");
+                if (loading) loading.style.display = "none";
+                if (app) app.style.display = "block";
                 loadFolders();
             } else {
                 window.location.href = 'login.html';
             }
         } catch (e) {
+            console.error("Auth check failed:", e);
             window.location.href = 'login.html';
         }
     }
