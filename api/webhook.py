@@ -250,11 +250,17 @@ def check_auth():
     return jsonify({"authenticated": False}), 401
 
 # --- SERVING FRONTEND ---
-FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'public')
+# Gunakan path relatif yang lebih kuat untuk Vercel & Lokal
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'public')
 
 @app.route('/')
 def serve_index():
-    return send_from_directory(FRONTEND_DIR, 'index.html')
+    # Jika vercel.json gagal menangani '/', Flask akan mencoba melayani index.html
+    try:
+        return send_from_directory(FRONTEND_DIR, 'index.html')
+    except:
+        return "PostIt API is Running. (Frontend not found)", 200
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
@@ -268,9 +274,10 @@ def serve_login():
 def serve_static(path):
     return send_from_directory(FRONTEND_DIR, path)
 
-# Vercel entry point
-def handler(event, context):
-    return app(event, context)
+# Vercel entry point: Cukup expose 'app' untuk WSGI
+# Tidak perlu fungsi 'handler' manual jika menggunakan Flask
+# def handler(event, context):
+#     return app(event, context)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
