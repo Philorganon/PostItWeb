@@ -250,24 +250,15 @@ def check_auth():
     return jsonify({"authenticated": False}), 401
 
 # --- SERVING FRONTEND ---
-# Mendeteksi path secara dinamis untuk Vercel vs Lokal
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# Coba beberapa lokasi umum untuk folder public
-POTENTIAL_PUBLIC_DIRS = [
-    os.path.join(BASE_DIR, '..', 'public'),
-    os.path.join(os.getcwd(), 'public'),
-    '/var/task/public' # Path spesifik Vercel lambda
-]
-
-FRONTEND_DIR = next((d for d in POTENTIAL_PUBLIC_DIRS if os.path.exists(d)), POTENTIAL_PUBLIC_DIRS[0])
+FRONTEND_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'public')
 
 @app.route('/')
 def serve_index():
-    # Jika vercel.json gagal menangani '/', Flask akan mencoba melayani index.html
+    # Catatan: Vercel biasanya menangani ini via vercel.json (static serving)
     try:
         return send_from_directory(FRONTEND_DIR, 'index.html')
     except:
-        return "PostIt API is Running. (Frontend not found)", 200
+        return "PostIt API is Running. (Frontend served by Vercel Edge)", 200
 
 @app.route('/api/logout', methods=['POST'])
 def api_logout():
