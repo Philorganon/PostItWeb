@@ -250,9 +250,16 @@ def check_auth():
     return jsonify({"authenticated": False}), 401
 
 # --- SERVING FRONTEND ---
-# Gunakan path relatif yang lebih kuat untuk Vercel & Lokal
+# Mendeteksi path secara dinamis untuk Vercel vs Lokal
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.join(BASE_DIR, '..', 'public')
+# Coba beberapa lokasi umum untuk folder public
+POTENTIAL_PUBLIC_DIRS = [
+    os.path.join(BASE_DIR, '..', 'public'),
+    os.path.join(os.getcwd(), 'public'),
+    '/var/task/public' # Path spesifik Vercel lambda
+]
+
+FRONTEND_DIR = next((d for d in POTENTIAL_PUBLIC_DIRS if os.path.exists(d)), POTENTIAL_PUBLIC_DIRS[0])
 
 @app.route('/')
 def serve_index():
@@ -274,10 +281,9 @@ def serve_login():
 def serve_static(path):
     return send_from_directory(FRONTEND_DIR, path)
 
-# Vercel entry point: Cukup expose 'app' untuk WSGI
-# Tidak perlu fungsi 'handler' manual jika menggunakan Flask
-# def handler(event, context):
-#     return app(event, context)
+# Vercel entry point menggunakan Mangum
+from mangum import Mangum
+handler = Mangum(app, lifespan="off")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
