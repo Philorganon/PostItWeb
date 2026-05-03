@@ -1,19 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/*.py",
-      "use": "@vercel/python"
-    }
-  ],
   "rewrites": [
     {
       "source": "/hook/(.*)",
-      "destination": "/api/webhook.py"
+      "destination": "/api/webhook"
     },
     {
       "source": "/api/(.*)",
-      "destination": "/api/webhook.py"
+      "destination": "/api/webhook"
     }
   ]
 }
